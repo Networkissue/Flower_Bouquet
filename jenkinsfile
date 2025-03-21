@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'static_website'
         DOCKER_REGISTRY = 'dnetworkhub'
+        CONTAINER_PORT = '8083' // Port to expose
     }
 
     stages {
@@ -30,6 +31,19 @@ pipeline {
                         sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
                         sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
                     }
+                }
+            }
+        }
+
+        stage('RUN CONTAINER...') {
+            steps {
+                script {
+                    // Stop and remove any running container with the same name
+                    sh "docker stop static_website || true"
+                    sh "docker rm static_website || true"
+
+                    // Run the new container
+                    sh "docker run -d --name static_website -p ${CONTAINER_PORT}:80 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
                 }
             }
         }
