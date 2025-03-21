@@ -26,7 +26,8 @@ pipeline{
         stage('PUSH TO DOCKERHUB...'){
             steps{
                 script{
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                    sh "docker login -u your-username -p your-password"
+                    {
                     sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
                     sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
                     }
