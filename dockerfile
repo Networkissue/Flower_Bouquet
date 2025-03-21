@@ -5,7 +5,7 @@ FROM nginx:latest
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the static website files to the nginx web server directory
-COPY Flower_Bouquet/* /usr/share/nginx/html/
+COPY . /usr/share/nginx/html/
 
 # Expose port 80 to allow web traffic
 EXPOSE 80
