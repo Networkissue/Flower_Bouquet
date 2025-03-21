@@ -5,7 +5,7 @@ FROM nginx:latest
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the static website files to the nginx web server directory
-COPY . /usr/share/ngnix/html
+COPY . /usr/share/nginx/html
 
 #copy all files into targetdir
 COPY . .
