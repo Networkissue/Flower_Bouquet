@@ -24,10 +24,12 @@ pipeline {
 
         stage('PUSH TO DOCKERHUB...') {
             steps {
-                script {
-                    sh 'docker login -u dnetworkhub -p $DOCKER_PASSWORD'
-                    sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
-                    sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    script {
+                        sh 'docker login -u $DOCKER_USER -p $DOCKER_PASSWORD'
+                        sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
+                        sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
+                    }
                 }
             }
         }
