@@ -7,6 +7,9 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy the static website files to the nginx web server directory
 COPY . /usr/share/ngnix/html
 
+#copy all files into targetdir
+COPY . .
+
 #Expose port 80 to allow web traffic
 EXPOSE 80
 
