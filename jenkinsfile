@@ -1,4 +1,4 @@
-pipeline{
+pipeline {
     agent any 
     
     environment {
@@ -6,36 +6,31 @@ pipeline{
         DOCKER_REGISTRY = 'dnetworkhub'
     }
 
-    stages{
-        stage("GIT CLONING..."){
-            steps{
+    stages {
+        stage("GIT CLONING...") {
+            steps {
                 git url: 'https://github.com/Networkissue/Flower_Bouquet.git', branch: 'main'
-                
             }
         }
 
-        stage('DOCKER BUILD...'){
-            steps{
-                script{
+        stage('DOCKER BUILD...') {
+            steps {
+                script {
                     sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER} ."
                     sh "docker tag ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER} ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
                 }
             }
         }
 
-        stage('PUSH TO DOCKERHUB...'){
-            steps{
-                script{
-                    sh "docker login -u your-username -p your-password"
-                    {
-                    sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
-                    sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
+        stage('PUSH TO DOCKERHUB...') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-cred') {
+                        sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}"
+                        sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
                     }
-
                 }
             }
-
         }
     }
-  
 }
